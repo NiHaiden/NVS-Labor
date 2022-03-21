@@ -1,0 +1,173 @@
+% Class declaration
+% \NeedsTeXFormat{LaTeX2e}
+
+% Basis Layout
+\LoadClass{article}[12pt]
+\setlength{\parskip}{0.7\baselineskip}
+\setlength{\parindent}{0pt}
+
+% Imports
+\RequirePackage[utf8]{inputenc}
+\RequirePackage[T1]{fontenc}
+\RequirePackage[ngerman]{babel}
+\RequirePackage{geometry}
+\RequirePackage{graphicx}
+\RequirePackage{fancyhdr}
+\RequirePackage{listings}
+\RequirePackage{lastpage}
+\RequirePackage{xcolor}
+\RequirePackage{hyperref}
+\RequirePackage{cite}
+\RequirePackage{babelbib}
+\RequirePackage{float}
+\RequirePackage{xcolor}
+\RequirePackage{longtable}
+\RequirePackage{booktabs}
+
+
+% Page format
+\geometry{a4paper, top=3cm, bottom=3cm, left=2cm, right=2cm}
+
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+
+% headlines
+\fancypagestyle{firstpage} {
+  \fancyhf{}
+  \fancyhead[L]{\includegraphics[height=1.5cm]{C:/Users/nikla/logos/logo.png}}
+  \fancyhead[R]{\large Abteilung für Informatik}
+  \fancyfoot[R]{\thepage}
+}
+
+\fancypagestyle{tableofcontentpages} {
+  \fancyhf{}
+  \fancyhead[L]{\includegraphics[height=0.75cm]{C:/Users/nikla/logos/logo_cropped.png}}
+  \fancyhead[C]{$title$}
+  \fancyhead[R]{$author$}
+  \fancyfoot[R]{\thepage}
+}
+
+\fancypagestyle{standard} {
+  \fancyhf{}
+  \fancyhead[L]{\includegraphics[height=0.75cm]{C:/Users/nikla/logos/logo_cropped.png}}
+  \fancyhead[C]{$title$}
+  \fancyhead[R]{$author$}
+  \fancyfoot[R]{\thepage\ von \pageref{LastPage}}
+}
+
+\pagestyle{standard}
+
+% Listings
+\definecolor{backcolour}{rgb}{0.95,0.95,0.95}
+\definecolor{black}{rgb}{0,0,0}
+\definecolor{keywordcolour}{rgb}{0.007,0.19,0.98}
+\definecolor{commentcolor}{rgb}{0,0.53,0.09}
+\definecolor{strcolor}{rgb}{0.53,0.31,0}
+
+\definecolor{htlgreen}{RGB}{148,193,31}
+
+\lstdefinestyle{code} {
+  %backgroundcolor=\color{white},
+  basicstyle=\normalsize, %\ttfamily\footnotesize,
+  keywordstyle=\color{keywordcolour},
+  commentstyle=\color{commentcolor},
+  stringstyle=\color{strcolor},
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=b,
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  rulecolor=\color{black},  
+  frame=single,
+  framesep=3pt
+}
+
+\lstset{escapeinside={(*@}{@*)}}
+
+\lstset{style=code}
+
+\lstset{
+  literate=%
+    {Ö}{{\"O}}1
+    {Ä}{{\"A}}1
+    {Ü}{{\"U}}1
+    {ß}{{\ss}}1
+    {ü}{{\"u}}1
+    {ä}{{\"a}}1
+    {ö}{{\"o}}1
+}
+
+%Figures
+\let\origfigure\figure
+\let\endorigfigure\endfigure
+\renewenvironment{figure}[1][2] {
+    \expandafter\origfigure\expandafter[H]
+} {
+    \endorigfigure
+}
+
+\hypersetup{
+    colorlinks=false,
+    menucolor=black,
+    urlcolor=blue
+}
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+\ProcessOptions\relax
+
+\begin{document}
+
+%Title Page
+$if(titlepage)$
+\thispagestyle{firstpage}
+\pagenumbering{roman}
+\vspace*{8cm}
+\setlength{\tabcolsep}{0.2cm}
+\renewcommand{\arraystretch}{2}
+
+\Huge \textcolor{htlgreen}{$title$} \\
+\Huge $subtitle$
+\vspace{0.5cm}
+\hrule
+
+\Large
+\begin{tabular}{p{4cm}p{5cm}}
+Klasse: & 5BHIF \\
+Name:   & $author$ \\
+Abgabe: & $date$ \\
+Fälligkeitsdatum: & $deadline$
+\end{tabular}
+\renewcommand{\arraystretch}{1}
+\newpage
+$endif$
+
+\normalsize
+
+$if(tableofcontent)$
+%Table of contents
+\pagestyle{tableofcontentpages}
+\tableofcontents
+\newpage
+$endif$
+
+\pagenumbering{arabic}
+\pagestyle{standard}
+
+$body$
+
+%Sources
+$if(sources)$
+\newpage
+\section{Quellen}
+\bibliography{#1}{}
+\bibliographystyle{babunsrt}
+$endif$
+
+\end{document}
