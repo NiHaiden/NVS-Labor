@@ -1,0 +1,121 @@
+ROUTER2#show run
+Building configuration...
+
+Current configuration : 1475 bytes
+!
+! Last configuration change at 07:53:33 UTC Tue May 18 2021
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname ROUTER2
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+memory-size iomem 15
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+multilink bundle-name authenticated
+!
+!
+cts logging verbose
+!
+!
+license udi pid CISCO2901/K9 sn FCZ1850C2DH
+!
+!
+!
+redundancy
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ no ip address
+ ipv6 enable
+ ipv6 rip nvsripniklas enable
+!
+interface Embedded-Service-Engine0/0
+ no ip address
+ shutdown
+!
+interface GigabitEthernet0/0
+ no ip address
+ duplex auto
+ speed auto
+ ipv6 address 2001:DB8:6::1/64
+ ipv6 enable
+ ipv6 rip nvsripniklas enable
+!
+interface GigabitEthernet0/1
+ no ip address
+ duplex auto
+ speed auto
+ ipv6 address 2001:DB8:A3::1/64
+ ipv6 enable
+ ipv6 rip nvsripniklas enable
+!
+interface Serial0/0/0
+ no ip address
+ shutdown
+!
+interface Serial0/0/1
+ no ip address
+ ipv6 address 2001:DB8:A2::2/64
+ ipv6 enable
+ ipv6 rip nvsripniklas enable
+ clock rate 64000
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+!
+ipv6 router rip nvsripniklas
+!
+!
+!
+!
+control-plane
+!
+!
+!
+line con 0
+line aux 0
+line 2
+ no activation-character
+ no exec
+ transport preferred none
+ transport output pad telnet rlogin lapb-ta mop udptn v120 ssh
+ stopbits 1
+line vty 0 4
+ login
+ transport input none
+!
+scheduler allocate 20000 1000
+!
+end

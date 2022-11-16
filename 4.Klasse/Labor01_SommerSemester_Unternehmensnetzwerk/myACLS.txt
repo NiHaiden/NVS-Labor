@@ -1,0 +1,64 @@
+
+#----Access List für internen Gateway----#
+#----Dies löscht die Access List aus der Running-Config!#
+no access-list 101
+
+access-list 101 remark "Erlaube das Verbinden aus dem internen LAN zu unserem DNS Server, um Namensabfragen machen zu können"
+access-list 101 permit tcp 192.168.6.0 0.0.0.255 host 193.168.130.2 eq 53
+access-list 101 permit udp 192.168.6.0 0.0.0.255 host 193.168.130.2 eq 53
+
+access-list 101 remark "Erlaube das Verbinden aus dem internen LAN auf den Firmen FTP-Server"
+access-list 101 permit tcp 192.168.6.0 0.0.0.255 host 36.7.12.132 eq 21
+
+access-list 101 remark "Erlaube das Verbinden aus dem internen LAN auf jeden beliebigen Webserver über HTTP mit Port 80 oder HTTPS mit Port 443"
+access-list 101 permit tcp 192.168.6.0 0.0.0.255 any eq  80
+access-list 101 permit tcp 192.168.6.0 0.0.0.255 any eq  443
+
+
+access-list 101 remark "Lässt alle Pakete durch, die zu einer bestehenden Verbindung gehoeren - funktioniert nur auf TCP."
+access-list 101 permit tcp any any established #erlaubt alle aufgebauten Verbindungen durch die Firewall
+
+
+#----Access List für den externen Gateway----#
+
+
+
+
+IntGW
+no access-list 100
+access-list 100 remark TCP fuer HTTP(S)
+access-list 100 permit tcp 192.168.13.0 0.0.0.255 any eq 80
+access-list 100 permit tcp 192.168.13.0 0.0.0.255 any eq 443
+
+access-list 100 remark TCP fuer HTTP(S) in DMZ
+access-list 100 permit tcp 192.168.13.0 0.0.0.255 host 36.7.12.129 eq 80
+access-list 100 permit tcp 192.168.13.0 0.0.0.255 host 36.7.12.129 eq 443
+
+access-list 100 remark TCP fuer FTP
+access-list 100 permit tcp 192.168.13.0 0.0.0.255 host 36.7.12.130 eq 21
+access-list 100 remark TCP+UDP fuer DNS
+access-list 100 permit tcp 192.168.13.0 0.0.0.255 host 193.168.130.2 eq 53
+access-list 100 permit udp 192.168.13.0 0.0.0.255 host 193.168.130.2 eq 53
+
+
+ExtGW
+no access-list 110
+access-list 110 remark "Erlaube Zugriff auf Webserver in DMZ"
+access-list 110 permit tcp any host 36.7.12.131 eq 80
+access-list 110 permit tcp any host 36.7.12.131 eq 443
+access-list 110 remark "Erlaube Zugriff auf FTP-Server in DMZ"
+access-list 110 permit tcp any host 36.7.12.132 eq 21
+access-list 110 permit tcp host 36.7.12.132 any eq 21
+access-list 110 remark "TCP+UDP fuer DNS"
+access-list 110 permit tcp host 193.168.130.2 eq 53 any
+access-list 110 permit udp host 193.168.130.2 eq 53 an
+access-list 110 remark "Erlaube eingehende Verbindungen die von einem internen Client angefragt wurden"
+access-list 110 permit tcp any any established
+
+no access-list 111
+access-list 111 remark "Erlaube Zugriff auf FTP-Server in DMZ"
+access-list 111 permit tcp host 36.7.12.132 any eq 21
+
+access-list 111 remark "Erlaube Zugriff auf Webserver in DMZ"
+access-list 111 permit tcp host 36.7.12.131 any eq 80
+access-list 111 permit tcp host 36.7.12.131 any eq 443

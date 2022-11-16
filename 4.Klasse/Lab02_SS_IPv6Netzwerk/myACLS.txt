@@ -1,0 +1,71 @@
+no ipv6 access-list LAN_INT_OUT
+ipv6 access-list LAN_INT_OUT
+
+remark IntGW 
+remark for Interface f0/0 aka Internal Network 
+
+remark Erlaube HTTP Zugriff
+permit tcp 2001:db8:6:0::/64 any eq 80
+
+remark Erlaube HTTPS Zugriff
+permit tcp 2001:db8:6:0::/64 any eq 443
+
+remark Erlaube FTP Zugriff auf internen Server
+permit tcp 2001:db8:6:0::/64 host 2001:db8:6:2::4 eq 21
+
+remark Erlaube nur von IntClient0 SSH Zugriff
+permit tcp 2001:db8:6:0::1 any eq 22
+
+remark Erlaube DNS Zugriff
+permit tcp 2001:db8:6:0::/64 host 2001:db8:c:1::4 eq 53
+permit udp 2001:db8:6:0::/64 host 2001:db8:c:1::4 eq 53
+
+remark Erlaube Ping ICMP Tests
+permit udp tcp 2001:db8:6:0::/64 any
+
+
+no ipv6 access-list LAN_INT_IN
+ipv6 access-list LAN_INT_IN
+
+remark IntGW
+remark Workaround, da Packettracer mit any any alles durchlaesst, also effektiv die Firewall nutzlos macht
+
+remark for interface f0/1
+
+remark HTTP & HTTPS
+permit tcp any eq 80 any
+permit tcp any eq 443 any
+
+remark FTP 
+permit tcp any eq 21 any
+
+remark DNS
+permit tcp any eq 53 any
+permit udp any eq 53 any
+
+remark SSH Zugriff
+permit tcp host 2001:db8:6:0::2 eq 22 host 2001:db8:6:0::1
+
+
+------#EXTGW#---------
+no ipv6 access-list LAN_EXT_IN
+ipv6 access-list LAN_EXT_IN
+remark ExtGW
+remark for interface se0/0/0
+remark HTTP(S) 
+permit tcp any host 2001:db8:6:2::3 eq 80
+permit tcp any host 2001:db8:6:2::3 eq 443
+remark FTP
+permit tcp any host 2001:db8:6:2::4 eq 21
+remark DNS
+permit tcp host 2001:db8:c:1::4 eq 53 any
+permit udp host 2001:db8:c:1::4 eq 53 any
+
+remark Erlaube jeglichen HTTP(S) Traffic ins Internet ueber ExtGW
+permit tcp any eq 80 any
+permit tcp any eq 443 any
+
+
+
+
+

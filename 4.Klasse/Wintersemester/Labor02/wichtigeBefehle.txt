@@ -1,0 +1,6 @@
+copy running-config tftp
+dir flash:
+dir nvram:
+copy flash tftp 
+copy tftp flash
+config-register 0x2100
